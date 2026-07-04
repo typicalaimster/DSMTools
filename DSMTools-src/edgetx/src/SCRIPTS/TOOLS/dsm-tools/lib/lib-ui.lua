@@ -214,7 +214,7 @@ function ui.drawFPMenuLine(y, text, lineNo, focusLineNo)
 end
 
 
-function ui.drawFPValueLine(y, heading, value, lineNo, focusLineNo, editingLine)
+function ui.drawFPValueLine(y, heading, value, lineNo, focusLineNo, editingLine, isEditable)
     local attr = ui.fp.textFont + ui.fp.textColor
 
     local w,h = lcd.sizeText(heading, attr)
@@ -239,13 +239,12 @@ function ui.drawFPValueLine(y, heading, value, lineNo, focusLineNo, editingLine)
     
     attr = ui.flipColor(isFocus,ui.fp.focusColor,ui.fp.textColor)
     lcd.drawText(x - ui.ms.textWidthPad, y+yPad, value, RIGHT + attr)
-  
-    
-    attr = ui.fp.boxColor  
-    
-    lcd.drawRectangle(x-w, y, w, ui.fp.lineHeight, attr)
 
-    lcdTouchButtons[#lcdTouchButtons+1] = {x=x-w, y=y, w=w, h=ui.fp.lineHeight, v=lineNo}
+    if (isEditable) then
+        attr = ui.fp.boxColor 
+        lcd.drawRectangle(x-w, y, w, ui.fp.lineHeight, attr)
+        lcdTouchButtons[#lcdTouchButtons+1] = {x=x-w, y=y, w=w, h=ui.fp.lineHeight, v=lineNo}
+    end
 end
 
 function ui.drawBitmap(x, y, imgDesc)

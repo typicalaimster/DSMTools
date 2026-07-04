@@ -1061,7 +1061,7 @@ local function DSM_Display()
             end
           end -- ListLine
         end -- Line with value/list
-        ui.drawFPValueLine(y, heading, text or "--", i, ctx_SelLine, ctx_EditLine)
+        ui.drawFPValueLine(y, heading, text or "--", i, ctx_SelLine, ctx_EditLine, isSelectable(line))
       end  -- not Flight mode
     end
     y = y + ui.getFPLineHeight() + ui.getFPLinesHeightPad()

@@ -18,6 +18,8 @@ NOTES for EdgeTX 2.12:  The DSM_Tools.lua has been renamed to dsm-tools.lua (all
 **If it give a memory/error the first time you try to run a sub-menu application, try a second time**
 **For older B&W radios, they don't have enouth memory for the suite. Keep using the stand alone scripts**
 
+**UPDATE v2.6: COLOR only: Fix display bug related to SAFE SELECT page, some fields are read-only (non-editable), will show without the box around**
+
 **UPDATE v2.5: COLOR only: Support for TX16S MK3 and EdgeTX 2.12  (May 1, 2026)**
 
 **UPDATE v2.4: Support for new Spektrum firmware 3.4.x  (Dec 16, 2025)**

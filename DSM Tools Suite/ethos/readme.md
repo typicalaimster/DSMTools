@@ -7,6 +7,8 @@ All the tools combined in a single app.
 
 **NOTE:  Requires Ethos 1.6.0 or newer**
 
+**UPDATE v2.6: COLOR only: Fix display bug related to SAFE SELECT page, a field who is read-only (non-editable), will show without the box highlight**
+
 **UPDATE v2.4: Support for new Spektrum firmware 3.4.x  (Dec 16, 2025)**
 
 From Spektrum Site:
