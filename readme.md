@@ -2,6 +2,8 @@
 # DSM Tools for EdgeTX, OpenTx and Ethos 
 This repository has a collection of EdgeTx/OpenTX/ETHOS Tools to use Spektrum Receivers
 
+**UPDATE: new version 2.6 for color radios only. a field in the SAFE SELECT page should not be editable See bug #62**
+
 **UPDATE: new version 2.5 for EdgeTX color radios only. Supports for TX16S MK3 larger screen and EdgeTX 2.12**
 
 **UPDATE: All clear (no changes) for new Spektrum firmware v3.4.22 released on Feb 4, 2026**
