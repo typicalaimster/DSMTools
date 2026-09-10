@@ -860,14 +860,12 @@ local function DSM_ProcessResponse()
     local valId = Dsm_to_Int16(multiBuffer(14), multiBuffer(15))
     local value = Dsm_to_SInt16(multiBuffer(16), multiBuffer(17))     --Signed int
 
-    --local updatedLine = nil
     for i = 0, 6 do     -- Find the menu line for this value
       local line = MenuLines[i]
       if line ~= nil then
         if line.Type ~= LT_MENU and line.ValId == valId then         -- identifier of ValueId stored in the line
           line.Val = value
           ctx_CurLine = i
-          --updatedLine = line
 
           updateValText(line)
 
@@ -881,10 +879,6 @@ local function DSM_ProcessResponse()
         end
       end
     end
-
-    --if (updatedLine == nil) then
-    --  LOG_write("Cannot Find Line for ValueId=%x\n", valId)
-    --end
 
     local menuId  = Menu.MenuId
     DSM_Send(0x15, 0x06, int16_MSB(menuId), int16_LSB(menuId), int16_MSB(valId), int16_LSB(valId))

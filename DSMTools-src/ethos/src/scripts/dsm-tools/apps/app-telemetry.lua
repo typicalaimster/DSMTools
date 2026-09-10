@@ -839,7 +839,7 @@ function TextGen.wakeup()
     if (lineNo==254) then
       -- Backlight??
     elseif (lineNo==255) then 
-        this.TG_Lines = {nil}
+        this.TG_Lines = {}
     else 
       local line = ""
       for i=0,12 do

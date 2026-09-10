@@ -970,11 +970,9 @@ local function ReadTxModelData()
   local path = model.path()
   MODEL.modelPath = path:gsub("%.bin", ".txt") -- change ".bin" for ".txt"
 
-  -- Get the SubDirectory if any, and create it inside our data. 
-  local pos =  path:find("/", 1, true)
-  if (pos) then
-    local folder = path:sub(1,pos-1)
-    os.mkdir(config.dataPath..folder)
+  -- Get the SubDirectory if any, and create it (and any parent folders) inside our data.
+  for pos in path:gmatch("()/") do
+    os.mkdir(config.dataPath..path:sub(1,pos-1))
   end
 
   print("Name ="..MODEL.modelName)

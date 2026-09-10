@@ -183,7 +183,7 @@ end
 
 function ui.getMenuButtonDim(index, xOffset, yOffset)
     local rowUsedWidth = (ui.menu.buttonWidth+ui.menu.buttonWidthPad)* ui.menu.buttonPerRow
-    local xOffset = xOffset + (LCD_W - rowUsedWidth)/2
+    xOffset = xOffset + (LCD_W - rowUsedWidth)/2
 
 
     local row = (index-1) // ui.menu.buttonPerRow
