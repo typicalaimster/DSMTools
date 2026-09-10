@@ -1156,8 +1156,9 @@ local function ReadTxModelData()
   local chNameDef = {[0]="Ail","Ele","Thr","Rud"}
 
   local TRANSLATE_AETR_TO_TAER=false
+  local module
 
-  -- Find the multimodule 
+  -- Find the multimodule
   module = model.getModule(0) -- Internal
   if (module and module:enable() and module:type()==15) then
       print("Module(0) is multi-module")
@@ -1182,7 +1183,7 @@ local function ReadTxModelData()
 
 
   MODEL.modelName = model.name()
-  MODEL.modelPath = model.path():gsub(".bin", "") -- remove ".bin"
+  MODEL.modelPath = model.path():gsub("%.bin", "") -- remove ".bin"
 
   print("Name ="..MODEL.modelName)
   print("Path ="..MODEL.modelPath)
