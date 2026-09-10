@@ -168,7 +168,7 @@ end
 local function LOG_write(...)
   if (logFile == nil) then LOG_open() end
   local str = string.format("%s :",(os.clock()-startTime)) .. string.format(...)
-  io.write(logFile, str)
+  logFile:write(str)
   print(str)
 end
 

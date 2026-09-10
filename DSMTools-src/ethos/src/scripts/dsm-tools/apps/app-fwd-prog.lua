@@ -228,7 +228,7 @@ local function LOG_write(...)
   if (DEBUG_ON == 0) then return end
   if (logFile == nil) then LOG_open() end
   local str = string.format("%s :",(os.clock()-startTime)) .. string.format(...)
-  io.write(logFile, str)
+  logFile:write(str)
   print(str)
 end
 
@@ -1100,7 +1100,7 @@ local function LoadTextFromFile(fileName, mem)
   -- cannot read file???
   assert(dataFile, "Cannot load Message file:" .. fileName)
 
-  local data, nr = io.read(dataFile, mem * 1024) -- read up to 10k characters (newline char also counts!)
+  local data = dataFile:read(mem * 1024) -- read up to 10k characters (newline char also counts!)
   io.close(dataFile)
 
   collectgarbage("collect")

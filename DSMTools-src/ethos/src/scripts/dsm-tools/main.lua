@@ -83,7 +83,7 @@ function Capture.load()
 end
 
 function Capture.unload()
-  unloadScript(Telemetry)
+  unloadScript(Capture)
 end
 
 

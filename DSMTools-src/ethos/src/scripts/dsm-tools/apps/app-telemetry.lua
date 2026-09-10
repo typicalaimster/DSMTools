@@ -483,7 +483,7 @@ function AS3XSettings.paint(page)
 
   y = y + LCD_LINE_H*2
 
-  if (fm == 0xE) then
+  if (this.AS3X_FmMsg == "--") then
     return
   end
 
