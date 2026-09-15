@@ -933,9 +933,14 @@ local function DSM_Send_Receive()
     refreshDisplay      = true
   else
     -- Check if enouth time has passed from last Received activity
-    if (getTime() > RXInactivityTime and Phase==PH_WAIT_CMD) then
-        LOG_write("RX Disconnected!!!\n")
-        reportErrorMsg = "RX Disconnected!!!"
+    if (getTime() > RXInactivityTime and (Phase==PH_WAIT_CMD or Phase==PH_RX_VER)) then
+        if (Phase==PH_RX_VER) then
+          LOG_write("RX Not Responding!!!\n")
+          reportErrorMsg = "No response from receiver. Check module/bind."
+        else
+          LOG_write("RX Disconnected!!!\n")
+          reportErrorMsg = "RX Disconnected!!!"
+        end
         reportErrorDiag = true
         Phase = PH_EXIT_DONE
     end
@@ -1431,9 +1436,10 @@ local function Inc_Init()
     --  initStep=1
     --  FileState = {}
     --end
-  else 
+  else
     Phase = PH_RX_VER -- Done Init
     DSM_Connect()
+    RXInactivityTime = getTime() + 8   -- Give the RX 8s to answer the version request
   end
 end
 
