@@ -228,7 +228,7 @@ local function LOG_write(...)
   if (DEBUG_ON == 0) then return end
   if (logFile == nil) then LOG_open() end
   local str = string.format("%s :",(os.clock()-startTime)) .. string.format(...)
-  io.write(logFile, str)
+  logFile:write(str)
   print(str)
 end
 
@@ -860,14 +860,12 @@ local function DSM_ProcessResponse()
     local valId = Dsm_to_Int16(multiBuffer(14), multiBuffer(15))
     local value = Dsm_to_SInt16(multiBuffer(16), multiBuffer(17))     --Signed int
 
-    --local updatedLine = nil
     for i = 0, 6 do     -- Find the menu line for this value
       local line = MenuLines[i]
       if line ~= nil then
         if line.Type ~= LT_MENU and line.ValId == valId then         -- identifier of ValueId stored in the line
           line.Val = value
           ctx_CurLine = i
-          --updatedLine = line
 
           updateValText(line)
 
@@ -881,10 +879,6 @@ local function DSM_ProcessResponse()
         end
       end
     end
-
-    --if (updatedLine == nil) then
-    --  LOG_write("Cannot Find Line for ValueId=%x\n", valId)
-    --end
 
     local menuId  = Menu.MenuId
     DSM_Send(0x15, 0x06, int16_MSB(menuId), int16_LSB(menuId), int16_MSB(valId), int16_LSB(valId))
@@ -939,9 +933,14 @@ local function DSM_Send_Receive()
     refreshDisplay      = true
   else
     -- Check if enouth time has passed from last Received activity
-    if (getTime() > RXInactivityTime and Phase==PH_WAIT_CMD) then
-        LOG_write("RX Disconnected!!!\n")
-        reportErrorMsg = "RX Disconnected!!!"
+    if (getTime() > RXInactivityTime and (Phase==PH_WAIT_CMD or Phase==PH_RX_VER)) then
+        if (Phase==PH_RX_VER) then
+          LOG_write("RX Not Responding!!!\n")
+          reportErrorMsg = "No response from receiver. Check module/bind."
+        else
+          LOG_write("RX Disconnected!!!\n")
+          reportErrorMsg = "RX Disconnected!!!"
+        end
         reportErrorDiag = true
         Phase = PH_EXIT_DONE
     end
@@ -1100,7 +1099,7 @@ local function LoadTextFromFile(fileName, mem)
   -- cannot read file???
   assert(dataFile, "Cannot load Message file:" .. fileName)
 
-  local data, nr = io.read(dataFile, mem * 1024) -- read up to 10k characters (newline char also counts!)
+  local data = dataFile:read(mem * 1024) -- read up to 10k characters (newline char also counts!)
   io.close(dataFile)
 
   collectgarbage("collect")
@@ -1156,8 +1155,9 @@ local function ReadTxModelData()
   local chNameDef = {[0]="Ail","Ele","Thr","Rud"}
 
   local TRANSLATE_AETR_TO_TAER=false
+  local module
 
-  -- Find the multimodule 
+  -- Find the multimodule
   module = model.getModule(0) -- Internal
   if (module and module:enable() and module:type()==15) then
       print("Module(0) is multi-module")
@@ -1182,7 +1182,7 @@ local function ReadTxModelData()
 
 
   MODEL.modelName = model.name()
-  MODEL.modelPath = model.path():gsub(".bin", "") -- remove ".bin"
+  MODEL.modelPath = model.path():gsub("%.bin", "") -- remove ".bin"
 
   print("Name ="..MODEL.modelName)
   print("Path ="..MODEL.modelPath)
@@ -1436,9 +1436,10 @@ local function Inc_Init()
     --  initStep=1
     --  FileState = {}
     --end
-  else 
+  else
     Phase = PH_RX_VER -- Done Init
     DSM_Connect()
+    RXInactivityTime = getTime() + 8   -- Give the RX 8s to answer the version request
   end
 end
 

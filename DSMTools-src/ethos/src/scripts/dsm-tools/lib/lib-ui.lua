@@ -183,7 +183,7 @@ end
 
 function ui.getMenuButtonDim(index, xOffset, yOffset)
     local rowUsedWidth = (ui.menu.buttonWidth+ui.menu.buttonWidthPad)* ui.menu.buttonPerRow
-    local xOffset = xOffset + (LCD_W - rowUsedWidth)/2
+    xOffset = xOffset + (LCD_W - rowUsedWidth)/2
 
 
     local row = (index-1) // ui.menu.buttonPerRow
@@ -262,33 +262,35 @@ function ui.drawFPMenuLine(y, text, lineNo, focusLineNo)
 end
 
 
-function ui.drawFPValueLine(y, heading, value, lineNo, focusLineNo, editingLine)
+function ui.drawFPValueLine(y, heading, value, lineNo, focusLineNo, editingLine, isSelectable)
     lcd.font(ui.fp.textFont)
     lcd.color(ui.fp.textColor)
 
     local w,h = lcd.getTextSize(heading)
     local yPad = (ui.fp.lineHeight-h) // 2
 
-    local isFocus = lineNo==focusLineNo
-    local isEditting =  lineNo == editingLine
-    -- Heaing 
+    local isFocus = isSelectable and lineNo==focusLineNo
+    local isEditting = isSelectable and lineNo == editingLine
+    -- Heaing
     lcd.drawText(ui.ms.textWidthPad, y+yPad, heading)
 
     local x = LCD_W
     -- Line with Value
     local w =  (LCD_W // 3)
     ui.flipColor(isFocus,ui.fp.focusColor,ui.fp.textBGColor)
-    lcd.drawFilledRectangle(x-w, y, w, ui.fp.lineHeight)  
-    
+    lcd.drawFilledRectangle(x-w, y, w, ui.fp.lineHeight)
+
     ui.flipColor(isFocus,ui.fp.focusBGColor,ui.fp.textColor)
     lcd.drawText(x - ui.ms.textWidthPad, y+yPad, value, TEXT_RIGHT)
-  
+
     if (isEditting) then
       lcd.color(ui.fp.editBoxColor)
       lcd.drawRectangle(x-w, y, w, ui.fp.lineHeight, 2)
-    end 
-  
-    lcdTouchButtons[#lcdTouchButtons+1] = {x=x-w, y=y, w=w, h=ui.fp.lineHeight, v=lineNo}
+    end
+
+    if (isSelectable) then
+      lcdTouchButtons[#lcdTouchButtons+1] = {x=x-w, y=y, w=w, h=ui.fp.lineHeight, v=lineNo}
+    end
 end
 
 function ui.drawBitmap(x, y, imgDesc)

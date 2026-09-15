@@ -83,7 +83,7 @@ function Capture.load()
 end
 
 function Capture.unload()
-  unloadScript(Telemetry)
+  unloadScript(Capture)
 end
 
 
@@ -143,13 +143,13 @@ function MainScreen.create()
     
     local text = "Version "..config.version
     local w,h = ui.getTextPaddedSize(text)
-    xPos = ui.ms.textWidthPad
-    yPos = maxH - h  
+    local xPos = ui.ms.textWidthPad
+    local yPos = maxH - h
     form.addStaticText(nil,  {x = xPos , y = yPos , w = w, h = h}, text)
 
     text = "Frankie Arzu/Pascal Langer"
     w,h = ui.getTextPaddedSize(text)
-    xPos =  (maxW - w) 
+    xPos =  (maxW - w)
     form.addStaticText(nil,  {x = xPos , y = yPos , w = w, h = h}, text)
   end
   

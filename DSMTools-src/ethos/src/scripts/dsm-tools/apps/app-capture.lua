@@ -71,7 +71,7 @@ local function LOG_write(...)
     if (logFile==nil) then LOG_open() end
 
     local str = string.format(...)
-    assert(io.write(logFile, str),"Can't write to log")
+    assert(logFile:write(str),"Can't write to log")
     print(str)
 end
 

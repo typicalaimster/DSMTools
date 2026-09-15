@@ -168,7 +168,7 @@ end
 local function LOG_write(...)
   if (logFile == nil) then LOG_open() end
   local str = string.format("%s :",(os.clock()-startTime)) .. string.format(...)
-  io.write(logFile, str)
+  logFile:write(str)
   print(str)
 end
 
@@ -207,7 +207,7 @@ local function ST_LoadFileData()
     -- cannot read file???
     if (file==nil) then return 0 end
   
-    local line = file:read(2000)
+    local line = file:read("*a") -- read entire file; a full MV_DATA_END dataset can exceed a fixed byte cap
     file:close()
   
     if line==nil or #line == 0 then return 0 end -- No data??
@@ -940,8 +940,9 @@ end
 
 local function ReadTxModelData()
   local TRANSLATE_AETR_TO_TAER=false
+  local module
 
-  -- Find the multimodule 
+  -- Find the multimodule
   module = model.getModule(0) -- Internal
   if (module and module:enable() and module:type()==15) then
       print("Module(0) is multi-module")
@@ -967,13 +968,11 @@ local function ReadTxModelData()
   MODEL.modelName = model.name()
 
   local path = model.path()
-  MODEL.modelPath = path:gsub(".bin", ".txt") -- change ".bin" for ".txt"
+  MODEL.modelPath = path:gsub("%.bin", ".txt") -- change ".bin" for ".txt"
 
-  -- Get the SubDirectory if any, and create it inside our data. 
-  local pos =  path:find("/", 1, true)
-  if (pos) then
-    local folder = path:sub(1,pos-1)
-    os.mkdir(config.dataPath..folder)
+  -- Get the SubDirectory if any, and create it (and any parent folders) inside our data.
+  for pos in path:gmatch("()/") do
+    os.mkdir(config.dataPath..path:sub(1,pos-1))
   end
 
   print("Name ="..MODEL.modelName)

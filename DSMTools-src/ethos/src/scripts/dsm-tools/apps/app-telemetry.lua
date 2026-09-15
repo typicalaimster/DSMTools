@@ -483,7 +483,7 @@ function AS3XSettings.paint(page)
 
   y = y + LCD_LINE_H*2
 
-  if (fm == 0xE) then
+  if (this.AS3X_FmMsg == "--") then
     return
   end
 
@@ -839,7 +839,7 @@ function TextGen.wakeup()
     if (lineNo==254) then
       -- Backlight??
     elseif (lineNo==255) then 
-        this.TG_Lines = {nil}
+        this.TG_Lines = {}
     else 
       local line = ""
       for i=0,12 do
@@ -933,8 +933,8 @@ function FlightPack.wakeup()
       -- BIG Endian
       local v1 = getI16(2) -- Volts1
       local v2 = getI16(4) -- Volts2
-      this.FP_Value[3] =  ifThenElse(v1>0,v1,nil) -- Volts1
-      this.FP_Value[7] =  ifThenElse(v2>0,v2,nil) -- Volts 2
+      this.FP_Value[3] =  ifThenElse(v1 ~= nil and v1>0,v1,nil) -- Volts1
+      this.FP_Value[7] =  ifThenElse(v2 ~= nil and v2>0,v2,nil) -- Volts 2
 
       --this.FP_Value[1] =  ifThenElse(v1>0,getI16(6)) -- Used 1
       --this.FP_Value[5] =  ifThenElse(v2>0,getI16(8)) -- Used 2
@@ -1118,17 +1118,25 @@ function GpsBin.wakeup()
   local this = Gps
 
   if getFrameData(I2C_GPS_BIN) then -- Specktrum Telemetry ID of data received
-    this.GPS_Alt = (getU16(2) - 1000) * 105 / 32  -- conver m to feet
-    this.GPS_Lat = getI32(4) / 10
-    this.GPS_Lon = getI32(8) / 10
-    this.GPS_Course = (getU16(12) or 0) / 10
-    this.GPS_Speed  = getU8(14) / 1.85200  -- Convert Km to Knots
-    this.GPS_Sats = getU8(15) 
+    local alt   = getU16(2)
+    local lat   = getI32(4)
+    local lon   = getI32(8)
+    local speed = getU8(14)
+    local sats  = getU8(15)
 
-    this.GPS_Lat_Str = string.format("%4.10f",this.GPS_Lat / 1000000)
-    this.GPS_Lon_Str = string.format("%4.10f",this.GPS_Lon / 1000000)
+    if (alt ~= nil and lat ~= nil and lon ~= nil and speed ~= nil) then
+      this.GPS_Alt = (alt - 1000) * 105 / 32  -- conver m to feet
+      this.GPS_Lat = lat / 10
+      this.GPS_Lon = lon / 10
+      this.GPS_Course = (getU16(12) or 0) / 10
+      this.GPS_Speed  = speed / 1.85200  -- Convert Km to Knots
+      this.GPS_Sats = sats
 
-    lcd.invalidate()
+      this.GPS_Lat_Str = string.format("%4.10f",this.GPS_Lat / 1000000)
+      this.GPS_Lon_Str = string.format("%4.10f",this.GPS_Lon / 1000000)
+
+      lcd.invalidate()
+    end
   end
 end
 
