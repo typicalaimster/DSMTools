@@ -306,7 +306,7 @@ local function GetTextInfoFromFile(pos)
   -- open and read File
   local dataFile = assert(io.open(MSG_FILE, "r"))  
   dataFile:seek(pos)
-  local buff = dataFile:read("*line")
+  local buff = dataFile:read("l")
   io.close(dataFile)
 
   local line=""

@@ -207,7 +207,7 @@ local function ST_LoadFileData()
     -- cannot read file???
     if (file==nil) then return 0 end
   
-    local line = file:read("*a") -- read entire file; a full MV_DATA_END dataset can exceed a fixed byte cap
+    local line = file:read(20000) -- MV_DATA_END(1040) entries worst-case ~11,450 bytes; string formats ("a"/"*a") are not supported by Ethos' io library
     file:close()
   
     if line==nil or #line == 0 then return 0 end -- No data??
